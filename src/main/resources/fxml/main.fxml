@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.studentdb.controller.MainController" fx:id="mainBorderPane">
+    <left>
+        <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="200" spacing="10">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
+            <Label text="StudentDB" styleClass="sidebar-title"/>
+            <Region VBox.vgrow="ALWAYS" prefHeight="20"/>
+            <Button text="Dashboard" styleClass="sidebar-btn" maxWidth="Infinity" onAction="#showDashboard"/>
+            <Button text="Students" styleClass="sidebar-btn" maxWidth="Infinity" onAction="#showStudents"/>
+            <Button text="Add Student" styleClass="sidebar-btn" maxWidth="Infinity" onAction="#showAddStudent"/>
+            <Region VBox.vgrow="ALWAYS" />
+            <Button text="About" styleClass="sidebar-btn" maxWidth="Infinity" onAction="#showAbout"/>
+        </VBox>
+    </left>
+</BorderPane>
