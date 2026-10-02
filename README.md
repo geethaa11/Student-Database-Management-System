@@ -1,39 +1,60 @@
 # Student Database Management System
 
-A complete desktop application built with JavaFX, SQLite, and JDBC to manage student records.
-
-## Features
-- **Dashboard:** View statistics on total students and departments.
-- **Student Management (CRUD):** Add, Edit, Delete, and Clear student forms.
-- **Search:** Quickly search for students by name, roll number, or department.
-- **Validation:** Ensures valid email, phone, CGPA, and prevents duplicate roll numbers.
-- **Persistence:** Uses a local SQLite database (`student_manager.db`) stored in the project root.
-
-## Architecture
-- **Language:** Java 17
-- **GUI:** JavaFX with FXML and CSS
-- **Database:** SQLite & JDBC
-- **Build Tool:** Maven
-
-## Prerequisites
-- JDK 17 or higher
-- Maven (installed and added to PATH)
-
-## Setup and Execution
-
-1. **Clone the repository (if not already done):**
-   ```bash
-   git clone <repository_url>
-   cd Student-Database-Management-System
-   ```
-
-2. **Run the application using Maven:**
-   ```bash
-   mvn clean javafx:run
-   ```
-   *Note: If you are using an IDE like IntelliJ or Eclipse, you can run the `com.studentdb.Main` class directly (ensure JavaFX is configured in your IDE settings).*
+A complete application built to manage student records. It now includes **both** a JavaFX desktop application and a modern Web Application.
 
 ## Project Structure
-- `src/main/java/com/studentdb/` - Contains the Java source code (MVC structure).
-- `src/main/resources/` - Contains the FXML layouts and CSS styles.
-- `student_manager.db` - Automatically created on the first run.
+- `src/` & `pom.xml` - The original JavaFX Desktop Application.
+- `web-backend/` - The Spring Boot REST API for the web version.
+- `web-frontend/` - The HTML/CSS/JS frontend for the web version.
+- `Dockerfile` - Used for deploying the web version to production.
+
+---
+
+## 1. Running the JavaFX Desktop App (Local)
+Ensure you have JDK 17+ and Maven installed.
+```bash
+mvn clean javafx:run
+```
+Data is stored locally in `student_manager.db` in the root folder.
+
+---
+
+## 2. Running the Web App (Local Development)
+
+### Start the Backend API
+Navigate to the `web-backend` directory and run the Spring Boot app:
+```bash
+cd web-backend
+mvn spring-boot:run
+```
+This starts the backend on `http://localhost:8080`. It connects to the exact same `student_manager.db` file used by the JavaFX app.
+
+### Start the Frontend
+The frontend files are static. You can simply open `web-frontend/index.html` in your browser, or serve it via a simple HTTP server (e.g., `python -m http.server 8000`). Since the backend serves it automatically in production, CORS is enabled for local dev.
+
+---
+
+## 3. Production Deployment (Docker)
+
+The web application is designed to be deployed as a single Docker container. The Spring Boot backend automatically serves the frontend static files.
+
+### Security Note
+**Never commit secrets!** Environment variables control configuration, and no credentials are hardcoded.
+
+### Building the Image
+```bash
+docker build -t student-db-web .
+```
+
+### Running in Production & Migrating Data
+Since SQLite stores data in a file, you **must use a Docker Volume** to prevent data loss when the container restarts. 
+
+To migrate your existing local database into production, simply mount the local file or directory into the container's `/data` directory:
+
+```bash
+# Run the container, exposing port 8080, and mapping your local folder containing student_manager.db to /data
+docker run -d -p 8080:8080 -v $(pwd):/data student-db-web
+```
+*If deploying to a cloud provider like Render or Railway, configure a **Persistent Disk** mounted at `/data`.*
+
+Access the live web app at: `http://localhost:8080/`
